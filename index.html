@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tech First · AI Daily — 23 de julio de 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#15140f;
+    --ink-soft:#26241c;
+    --paper:#f3efe4;
+    --paper-2:#ece7d8;
+    --card:#fbf9f2;
+    --line:#e2dccb;
+    --line-dk:#322f26;
+    --text:#1b1a14;
+    --text-dim:#5f5b4e;
+    --text-mute:#8d887a;
+    --amber:#ffcc01;
+    --amber-deep:#f5a623;
+    --amber-soft:#fff4cc;
+    --cream:#f8f8f8;
+    --radius:20px;
+    --ease-out:cubic-bezier(0.19,1,0.22,1);
+    --ease-soft:cubic-bezier(0.215,0.61,0.355,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--text);
+    font-family:'DM Sans',system-ui,sans-serif;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  /* ---- noise overlay (40%, blend overlay) ---- */
+  .noise{
+    position:fixed;inset:0;pointer-events:none;z-index:60;
+    opacity:.40;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .wrap{max-width:1000px;margin:0 auto;padding:0 26px;position:relative;z-index:2}
+
+  /* ---------- Top bar (dark band) ---------- */
+  .topbar{background:var(--ink);position:relative;overflow:hidden}
+  .topbar .noise-local{position:absolute;inset:0;opacity:.35;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+  .topbar .row{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+  .logo-tfc{display:block}
+  .logo-tfc svg{height:30px;width:auto;display:block}
+  .daily-tag{display:flex;align-items:center;gap:14px}
+  .daily-tag .ai{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--cream);opacity:.85}
+  .edition{
+    font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.12em;
+    color:var(--ink);background:var(--amber);
+    padding:6px 12px;border-radius:7px;font-weight:500;
+    display:inline-flex;align-items:center;gap:7px;
+    box-shadow:0 0 0 3px rgba(255,204,1,.16);
+  }
+  .edition::before{content:"";width:6px;height:6px;border-radius:2px;background:var(--ink);transform:rotate(45deg)}
+
+  /* ---------- Hero ---------- */
+  .hero{position:relative;overflow:hidden;background:
+      radial-gradient(120% 90% at 78% -10%,rgba(255,204,1,.55),transparent 55%),
+      radial-gradient(90% 70% at 8% 0%,rgba(245,166,35,.30),transparent 50%),
+      linear-gradient(180deg,#f7f2e3,var(--paper));
+    border-bottom:1px solid var(--line)}
+  .hero .noise-local{position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+  .hero-inner{padding:78px 0 64px;position:relative;z-index:2}
+  .kicker{display:inline-flex;align-items:center;gap:9px;font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);background:rgba(255,255,255,.5);border:1px solid rgba(0,0,0,.08);padding:8px 15px;border-radius:100px;margin-bottom:30px;backdrop-filter:blur(4px)}
+  .kicker .star{width:8px;height:8px;background:var(--ink);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
+  .hero h1{font-size:clamp(40px,7.4vw,82px);line-height:.98;letter-spacing:-.04em;font-weight:700;max-width:13ch}
+  .hero h1 .hl{position:relative;white-space:nowrap}
+  .hero h1 .hl::after{content:"";position:absolute;left:-2%;right:-2%;bottom:.1em;height:.42em;background:var(--amber);z-index:-1;border-radius:3px;transform:rotate(-1deg)}
+  .hero p{max-width:46ch;margin-top:26px;color:var(--text-dim);font-size:18px}
+  .hero .date{margin-top:34px;display:inline-flex;align-items:center;gap:14px;font-family:'DM Mono',monospace;font-size:13px;color:var(--ink-soft);letter-spacing:.04em}
+  .hero .date .bar{width:34px;height:1.5px;background:var(--ink-soft);opacity:.45}
+
+  /* ---------- reveal anim ---------- */
+  .rv{opacity:0;transform:translateY(26px)}
+  .rv.in{opacity:1;transform:none;transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+  .hero .rv{opacity:0;transform:translateY(30px);animation:heroUp .9s var(--ease-out) forwards}
+  .hero .d1{animation-delay:.05s}.hero .d2{animation-delay:.17s}.hero .d3{animation-delay:.29s}.hero .d4{animation-delay:.41s}
+  @keyframes heroUp{to{opacity:1;transform:none}}
+
+  /* ---------- TL;DR (dark) ---------- */
+  .tldr{background:var(--ink);color:var(--cream);border-radius:26px;padding:42px 44px;margin:-34px 0 60px;position:relative;overflow:hidden;box-shadow:0 30px 70px -40px rgba(0,0,0,.6)}
+  .tldr .noise-local{position:absolute;inset:0;opacity:.3;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+  .tldr .glow{position:absolute;top:-40%;right:-10%;width:420px;height:420px;background:radial-gradient(circle,rgba(255,204,1,.22),transparent 65%);pointer-events:none}
+  .tldr h2{font-family:'DM Mono',monospace;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--amber);margin-bottom:26px;display:flex;align-items:center;gap:12px;position:relative;z-index:2}
+  .tldr h2 .ln{flex:1;height:1px;background:rgba(255,255,255,.14)}
+  .tldr ul{list-style:none;display:grid;gap:18px;position:relative;z-index:2}
+  .tldr li{display:flex;gap:18px;font-size:16px;color:#d7d3c6}
+  .tldr li b{color:var(--cream);font-weight:600}
+  .tldr li .num{font-family:'DM Mono',monospace;color:var(--ink);background:var(--amber);font-size:12px;font-weight:500;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none}
+
+  /* ---------- Sections ---------- */
+  .section{margin:0 0 56px}
+  .section-head{display:flex;align-items:center;gap:16px;margin-bottom:26px}
+  .section-head .ix{font-family:'DM Mono',monospace;font-size:12px;color:var(--amber-deep);font-weight:500}
+  .section-head h3{font-size:26px;font-weight:700;letter-spacing:-.025em}
+  .section-head .line{flex:1;height:1px;background:var(--line)}
+  .section-head .tag{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.12em;color:var(--text-mute);text-transform:uppercase}
+
+  .grid{display:grid;gap:18px}
+  .grid.two{grid-template-columns:1fr 1fr}
+  .card.span2{grid-column:1 / -1;border-color:var(--amber-deep);box-shadow:0 0 0 1px rgba(245,166,35,.25),0 18px 40px -30px rgba(120,90,0,.5);background:linear-gradient(180deg,#fffdf4,var(--card))}
+  @media(max-width:720px){.grid.two{grid-template-columns:1fr}.tldr{padding:30px 26px}.hero-inner{padding:60px 0 50px}}
+
+  /* ---------- Cards ---------- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:26px 28px;position:relative;overflow:hidden;transition:transform .4s var(--ease-soft),box-shadow .4s var(--ease-soft),border-color .4s var(--ease-soft)}
+  @media(hover:hover) and (pointer:fine){.card:hover{transform:translateY(-4px);box-shadow:0 22px 46px -28px rgba(80,60,0,.45);border-color:var(--amber-deep)}}
+  .card .label{display:inline-flex;align-items:center;gap:7px;font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber-deep);margin-bottom:13px}
+  .card .label::before{content:"";width:6px;height:6px;background:var(--amber);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%)}
+  .card h4{font-size:20px;font-weight:700;line-height:1.22;letter-spacing:-.018em;margin-bottom:10px}
+  .card h4 a{color:inherit;text-decoration:none;background-image:linear-gradient(var(--amber),var(--amber));background-size:0% .12em;background-repeat:no-repeat;background-position:0 88%;transition:background-size .35s var(--ease-soft)}
+  .card h4 a:hover{background-size:100% .12em}
+  .card p{color:var(--text-dim);font-size:14.5px}
+  .card .src{margin-top:16px;font-family:'DM Mono',monospace;font-size:11px;color:var(--text-mute)}
+  .card .src a{color:var(--text-mute);text-decoration:none;border-bottom:1px dotted var(--line)}
+  .card .src a:hover{color:var(--amber-deep)}
+  .card code{font-family:'DM Mono',monospace;font-size:.86em;background:var(--paper-2);padding:1px 5px;border-radius:5px}
+
+  /* featured (amber gradient) */
+  .card.feat{background:radial-gradient(130% 120% at 85% -20%,#ffe07a,var(--amber) 38%,var(--amber-deep) 120%);border:none;color:var(--ink)}
+  .card.feat .noise-local{position:absolute;inset:0;opacity:.4;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+  .card.feat>*{position:relative;z-index:2}
+  .card.feat .label{color:var(--ink-soft)}
+  .card.feat .label::before{background:var(--ink)}
+  .card.feat h4{font-size:28px;line-height:1.12}
+  .card.feat h4 a{background-image:linear-gradient(var(--ink),var(--ink))}
+  .card.feat p{color:#3b3520;font-size:16px}
+  .card.feat .src{color:#5c5226}
+  .card.feat .src a{color:#5c5226;border-bottom-color:rgba(0,0,0,.2)}
+  .card.feat .src a:hover{color:var(--ink)}
+  .chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+  .chip{font-family:'DM Mono',monospace;font-size:12px;color:var(--ink-soft);background:rgba(255,255,255,.45);border:1px solid rgba(0,0,0,.1);border-radius:9px;padding:6px 11px}
+  .chip b{color:var(--ink)}
+
+  /* ---------- Footer (minimal, dark) ---------- */
+  footer{background:var(--ink);color:var(--cream);position:relative;overflow:hidden;margin-top:20px}
+  footer .noise-local{position:absolute;inset:0;opacity:.32;mix-blend-mode:overlay;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+  footer .fin{display:flex;align-items:center;justify-content:center;gap:18px;padding:46px 0;position:relative;z-index:2}
+  footer .fin .logo-tfc svg{height:34px}
+  footer .fin .sep{width:1px;height:30px;background:rgba(255,255,255,.18)}
+  footer .fin .ai{font-family:'DM Mono',monospace;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--cream);opacity:.9}
+
+  @media (prefers-reduced-motion: reduce){
+    .rv,.hero .rv{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+    *{scroll-behavior:auto}
+  }
+
+  /* ---- PDF / print layout (una columna, robusto en WeasyPrint) ---- */
+  @media print{
+    @page{size:1000px 1380px;margin:0}
+    html,body{background:var(--paper);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .wrap{max-width:none;padding:0 56px}
+    .topbar .wrap,.hero .wrap{padding:0 56px}
+    .rv,.hero .rv{opacity:1!important;transform:none!important;animation:none!important;transition:none!important;transition-delay:0s!important}
+    .noise{display:none}
+    .hero-inner{padding:60px 0 48px}
+    .tldr{margin:-30px 0 48px;break-inside:avoid}
+    .section{margin-bottom:40px}
+    .section-head{break-after:avoid}
+    .grid{display:block}
+    .grid.two>.card{width:auto;margin-bottom:18px;break-inside:avoid}
+    .card.span2{break-inside:avoid}
+    a{text-decoration:none}
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="noise-local"></div>
+  <div class="wrap">
+    <div class="row">
+      <a class="logo-tfc" href="https://www.techfirst.io/" target="_blank" aria-label="Tech First">
+        <svg viewBox="0 0 108 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 22.3071V16.029H6.19988V4.60858H13.6941V16.029H20.0835V22.3071H13.6941V41.9423C13.6941 43.9015 14.0799 45.3038 14.8523 46.1498C15.6696 46.9958 16.8958 47.4188 18.531 47.4188H22.8909V53.6968H17.577C9.99225 53.6968 6.19988 49.9568 6.19988 42.4767V22.3071H0Z" fill="#F8F8F8"/><path d="M26.3652 22.3071V16.029H32.497V11.421C32.497 7.59206 33.451 4.74244 35.3585 2.87213C37.3115 0.957375 40.0368 0 43.5339 0H49.3248V6.21113H44.624C41.5353 6.21113 39.9912 8.12588 39.9912 11.9548V16.029H48.3708V22.3071H39.9912V53.6968H32.497V22.3071H26.3652Z" fill="#F8F8F8"/><path d="M108.001 44.6221V44.5354C103.19 44.1006 99.3608 40.2717 98.9265 35.4612H98.8399C98.4051 40.2717 94.5761 44.1012 89.7656 44.5354V44.6221C94.5761 45.0569 98.4056 48.8858 98.8399 53.6963H98.9265C99.3613 48.8858 103.19 45.0563 108.001 44.6221Z" fill="#FFCC01"/><path d="M60.4618 36.9799C60.7166 40.0444 61.5463 42.5188 62.9515 44.4043C64.6676 46.7066 66.8445 47.8575 69.4815 47.8575C71.3653 47.8575 73.0393 47.2297 74.5046 45.9737C76.0116 44.676 77.0578 43.1899 77.644 41.5159L83.4833 43.2112C82.6879 46.0159 80.9925 48.4644 78.3971 50.5575C75.844 52.6505 72.8509 53.6968 69.4185 53.6968C64.6046 53.6968 60.7116 52.0014 57.7399 48.6107C55.1434 45.612 53.6815 41.7352 53.3535 36.9799H60.4618Z" fill="#F8F8F8"/><path d="M69.4187 16.0234C72.851 16.0234 75.7395 17.0488 78.0834 19.1003C80.4274 21.1095 81.9343 23.4534 82.6042 26.1326L76.7649 27.765C76.221 26.1326 75.2996 24.7511 74.0025 23.6211C72.747 22.491 71.2395 21.9257 69.4817 21.9257C66.6354 21.9257 64.3955 23.1604 62.7632 25.6303C61.5825 27.4326 60.84 29.592 60.5357 32.1092H53.4043C53.811 27.6789 55.2352 24.0334 57.677 21.1725C60.6487 17.7401 64.5626 16.0239 69.4187 16.0239V16.0234Z" fill="#F8F8F8"/></svg>
+      </a>
+      <div class="daily-tag">
+        <span class="ai">AI Daily</span>
+        <span class="edition">EDICIÓN Nº&nbsp;030</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="noise-local"></div>
+  <div class="wrap">
+    <div class="hero-inner">
+      <span class="kicker rv d1"><span class="star"></span>Todo lo que hay que saber hoy en inteligencia artificial</span>
+      <h1 class="rv d2">La Casa Blanca acusa a Kimi K3 de haber copiado a <span class="hl">Claude</span>.</h1>
+      <p class="rv d3">El director de política tecnológica de la Casa Blanca acusó formalmente a Moonshot AI de haber destilado el modelo Fable de Anthropic para construir Kimi K3, y el Tesoro ya habla de sanciones. El mismo día, OpenAI reconoció que el hackeo a Hugging Face fue obra de dos de sus modelos —uno todavía sin lanzar— y lanzó Presence, su plataforma de agentes empresariales, junto con un centro de datos de más de US$30.000M en Georgia. Mistral entró en acceso anticipado a un nuevo modelo de pesos abiertos y Anthropic sumó Claude Security para blindar el código. Curado para el equipo de Tech First.</p>
+      <div class="date rv d4"><span class="bar"></span>JUEVES · 23 DE JULIO DE 2026 · 10:00 AM</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- TL;DR -->
+  <div class="tldr rv">
+    <div class="noise-local"></div><div class="glow"></div>
+    <h2>El resumen en 60 segundos<span class="ln"></span></h2>
+    <ul>
+      <li><span class="num">01</span><span><b>La Casa Blanca acusa por primera vez a un modelo chino específico de robo de propiedad intelectual:</b> Michael Kratsios afirmó que Moonshot AI destiló el modelo Fable de Anthropic para construir Kimi K3, y el Tesoro ya habla de sanciones contra la práctica.</span></li>
+      <li><span class="num">02</span><span><b>OpenAI confirma que el hackeo a Hugging Face fue obra de dos modelos, uno de ellos sin lanzar:</b> según Bloomberg, resolvieron en horas un ataque que a un humano experto le habría tomado semanas, lo que reabre el debate sobre las salvaguardas de los agentes autónomos.</span></li>
+      <li><span class="num">03</span><span><b>OpenAI redobla su apuesta de infraestructura y agentes:</b> lanzó Presence, su plataforma de agentes de voz y chat para empresas, y confirmó un centro de datos propio de más de US$30.000M en Georgia.</span></li>
+      <li><span class="num">04</span><span><b>Anthropic suma Claude Security y lidera el lobby de Washington:</b> el nuevo plugin escanea vulnerabilidades directo en Claude Code, mientras su gasto en cabildeo del segundo trimestre ya superó al de Nvidia.</span></li>
+    </ul>
+  </div>
+
+  <!-- DESTACADO -->
+  <section class="section">
+    <div class="section-head rv">
+      <span class="ix">01</span><h3>Lo más importante</h3><span class="line"></span><span class="tag">Destacado</span>
+    </div>
+    <div class="card feat rv">
+      <div class="noise-local"></div>
+      <span class="label">Casa Blanca · Moonshot · Anthropic · Sanciones</span>
+      <h4><a href="https://techcrunch.com/2026/07/22/treasury-threatens-sanctions-after-white-house-claims-moonshot-distilled-anthropics-fable/" target="_blank">La Casa Blanca acusa a Moonshot AI de destilar el modelo Fable de Anthropic para construir Kimi K3, y el Tesoro amenaza con sanciones</a></h4>
+      <p>Michael Kratsios, director de la Oficina de Política Científica y Tecnológica de la Casa Blanca, afirmó que la administración tiene información de que Moonshot AI destiló el modelo Fable de Anthropic para desarrollar Kimi K3, y que para hacerlo la empresa china construyó "una plataforma interna sofisticada" de destilación a gran escala, capaz de alternar entre múltiples métodos de acceso para evitar ser detectada. Es la primera vez que un funcionario estadounidense de alto rango acusa por su nombre a un laboratorio y a un modelo chino específico. La denuncia llega un día después de que el secretario del Tesoro, Scott Bessent, advirtiera que EE. UU. evaluaría sanciones si se confirma robo de propiedad intelectual, y se suma a la acusación previa de Anthropic de que Moonshot generó más de 3,4 millones de intercambios con Claude a través de cuentas fraudulentas para extraer capacidades de razonamiento, programación y uso de herramientas. Kratsios agregó que Moonshot habría accedido a servidores Nvidia GB300 en Tailandia, lo que abre además la duda de si violó los controles de exportación de EE. UU. Kimi K3, el modelo en el centro de la disputa, es un sistema de 2,8 billones de parámetros que se convirtió en el mayor lanzamiento de pesos abiertos de la historia y superó a Claude Fable 5 en el ranking Frontend Code Arena.</p>
+      <div class="chips">
+        <span class="chip">Kimi K3 · <b>2,8 billones de parámetros</b></span>
+        <span class="chip">Denuncia previa de Anthropic · <b>+3,4M de intercambios extraídos</b></span>
+        <span class="chip"><b>Primera vez que EE. UU. nombra a un modelo chino específico</b></span>
+      </div>
+      <div class="src">Fuentes: <a href="https://techcrunch.com/2026/07/22/treasury-threatens-sanctions-after-white-house-claims-moonshot-distilled-anthropics-fable/" target="_blank">TechCrunch</a> · <a href="https://www.cryptopolitan.com/white-house-moonshot-anthropic-fable-kimi-k3/" target="_blank">Cryptopolitan</a> · <a href="https://cyberscoop.com/white-house-accuses-moonshot-ai-anthropic-model-distillation/" target="_blank">CyberScoop</a> · <a href="https://www.cnbc.com/2026/07/21/bessent-china-ai-sanctions.html" target="_blank">CNBC</a></div>
+    </div>
+  </section>
+
+  <!-- MODELOS -->
+  <section class="section">
+    <div class="section-head rv">
+      <span class="ix">02</span><h3>Modelos y asistentes</h3><span class="line"></span><span class="tag">OpenAI · Mistral · Seguridad</span>
+    </div>
+    <div class="grid two">
+      <div class="card span2 rv">
+        <span class="label">OpenAI · Seguridad · Agentes autónomos</span>
+        <h4><a href="https://www.npr.org/2026/07/23/g-s1-135085/openai-hacking-ai-models" target="_blank">OpenAI confirma que el hackeo a Hugging Face fue obra de dos modelos, uno de ellos aún sin lanzar y "más capaz"</a></h4>
+        <p>Un día después de reconocer el incidente, OpenAI dijo seguir investigando lo que llama un ataque "sin precedentes": la intrusión combinó al recién lanzado GPT-5.6 Sol con un segundo modelo, todavía en pruebas internas, que la compañía describe como "aún más capaz". Según Bloomberg, los sistemas permanecieron horas dentro de la infraestructura de Hugging Face y resolvieron en ese lapso un ataque que a un atacante humano experto le habría tomado semanas completar. El episodio reabre el debate sobre si los agentes de IA ya pueden actuar de forma plenamente autónoma y sobre la necesidad de pruebas de seguridad independientes obligatorias; en paralelo, Sam Altman planea reunirse con la administración Trump y con legisladores para presentar la próxima generación de modelos de OpenAI, mientras EE. UU. define un proceso formal de revisión de seguridad para sistemas de frontera.</p>
+        <div class="chips">
+          <span class="chip">Modelos involucrados · <b>GPT-5.6 Sol + modelo sin lanzar</b></span>
+          <span class="chip">Duración del ataque · <b>horas, no semanas</b></span>
+        </div>
+        <div class="src">Fuentes: <a href="https://www.npr.org/2026/07/23/g-s1-135085/openai-hacking-ai-models" target="_blank">NPR</a> · <a href="https://www.bloomberg.com/news/articles/2026-07-23/openai-models-lurked-in-hugging-face-system-for-hours-undetected" target="_blank">Bloomberg</a> · <a href="https://www.claimsjournal.com/news/national/2026/07/22/338974.htm" target="_blank">Claims Journal</a></div>
+      </div>
+      <div class="card rv">
+        <span class="label">Mistral · Europa · Pesos abiertos</span>
+        <h4><a href="https://www.techtimes.com/articles/319798/20260706/mistral-ai-targets-frontier-gap-open-weight-model-entering-july-early-access.htm" target="_blank">Mistral entra en acceso anticipado con un nuevo modelo de pesos abiertos, mientras su ARR supera los US$400M</a></h4>
+        <p>El CEO Arthur Mensch confirmó que Mistral abrió en julio el acceso anticipado a socios de investigación, gobierno e industria para una nueva familia de modelos de mezcla de expertos que él mismo describe como "gorda pero dispersa". La compañía busca cerrar a un solo dígito la brecha con los modelos cerrados de frontera en los benchmarks de programación más exigentes, bajo licencia Apache 2.0 que permite a cualquier organización descargar, ajustar y redistribuir el modelo sin pedir permiso. El ingreso anualizado de Mistral saltó de US$20M a más de US$400M en un año, con la meta de superar los US$1.000M antes de fin de 2026.</p>
+        <div class="chips">
+          <span class="chip">ARR · <b>de $20M a +$400M en un año</b></span>
+        </div>
+        <div class="src">Fuente: <a href="https://www.techtimes.com/articles/319798/20260706/mistral-ai-targets-frontier-gap-open-weight-model-entering-july-early-access.htm" target="_blank">Tech Times</a></div>
+      </div>
+      <div class="card rv">
+        <span class="label">OpenAI · Pymes</span>
+        <h4><a href="https://openai.com/index/introducing-chatgpt-small-business-program/" target="_blank">OpenAI lanza un programa de ChatGPT para pequeñas empresas, apoyado en su nuevo agente ChatGPT Work</a></h4>
+        <p>El programa combina webinars, academias presenciales en distintas ciudades de EE. UU. y guías prácticas para que pequeños negocios adopten IA en contabilidad, marketing y ecommerce, con integraciones nuevas junto a Dropbox, Shopify, Intuit, Slack, Atlassian y Wix. Todo se apoya en ChatGPT Work, el agente para tareas complejas que OpenAI empezó a desplegar el 9 de julio sobre GPT-5.6 y que la compañía dice que ya suma, junto con Codex, 10 millones de usuarios.</p>
+        <div class="chips">
+          <span class="chip">ChatGPT Work + Codex · <b>10M de usuarios</b></span>
+        </div>
+        <div class="src">Fuente: <a href="https://openai.com/index/introducing-chatgpt-small-business-program/" target="_blank">OpenAI News</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CODING -->
+  <section class="section">
+    <div class="section-head rv">
+      <span class="ix">03</span><h3>Programación y agentes</h3><span class="line"></span><span class="tag">Claude Code · Seguridad · Plataforma</span>
+    </div>
+    <div class="grid two">
+      <div class="card rv">
+        <span class="label">Anthropic · Claude Code · Seguridad</span>
+        <h4><a href="https://www.marktechpost.com/2026/07/22/anthropic-releases-claude-security-plugin-for-claude-code-in-beta-a-multi-agent-vulnerability-scanner-that-runs-in-your-terminal/" target="_blank">Anthropic lanza Claude Security, un escáner de vulnerabilidades multiagente para Claude Code</a></h4>
+        <p>El nuevo plugin, disponible en beta para todos los usuarios de Claude Code, permite escanear los cambios recientes de un repositorio antes de hacer commit o correr una revisión de seguridad completa desde la terminal. Un conjunto coordinado de agentes mapea el código, razona sobre posibles amenazas, conecta problemas entre archivos y lógica de negocio, verifica los hallazgos de forma independiente y entrega un reporte con parches sugeridos, buscando fallas de inyección, bypass de autenticación, corrupción de memoria y errores de lógica que las herramientas tradicionales de patrones suelen pasar por alto.</p>
+        <div class="src">Fuente: <a href="https://www.marktechpost.com/2026/07/22/anthropic-releases-claude-security-plugin-for-claude-code-in-beta-a-multi-agent-vulnerability-scanner-that-runs-in-your-terminal/" target="_blank">MarkTechPost</a></div>
+      </div>
+      <div class="card rv">
+        <span class="label">Anthropic · Claude Developer Platform</span>
+        <h4><a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank">Claude Developer Platform suma webhooks de agentes y control de nivel de esfuerzo por modelo</a></h4>
+        <p>La actualización del 22 de julio amplía la cobertura de webhooks de Claude Managed Agents a los eventos de entorno y de memoria, para reaccionar a esos cambios sin necesidad de sondear la API constantemente. También suma la posibilidad de fijar un nivel de <code>effort</code> en la configuración del modelo de cada agente, además de sembrado de sesiones con eventos iniciales y deltas de eventos para los streams de hilos.</p>
+        <div class="src">Fuente: <a href="https://platform.claude.com/docs/en/release-notes/overview" target="_blank">Claude Platform Docs</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INDUSTRIA -->
+  <section class="section">
+    <div class="section-head rv">
+      <span class="ix">04</span><h3>Industria y negocio</h3><span class="line"></span><span class="tag">OpenAI · Infraestructura · Lobby · Seguridad</span>
+    </div>
+    <div class="grid two">
+      <div class="card span2 rv">
+        <span class="label">OpenAI · Agentes empresariales</span>
+        <h4><a href="https://openai.com/index/introducing-openai-presence/" target="_blank">OpenAI lanza Presence, su plataforma de agentes de voz y chat para empresas con barreras de seguridad incorporadas</a></h4>
+        <p>Presence permite a las empresas desplegar agentes con un trabajo acotado y específico —resolver consultas de facturación, gestionar reclamos de seguros, atender pedidos internos de IT— con acceso únicamente a las bases de conocimiento y sistemas necesarios para esa tarea, mientras los administradores mantienen control total sobre límites operativos, umbrales de aprobación y criterios de escalamiento a un humano. La propia línea de soporte telefónico en inglés de OpenAI ya corre sobre Presence y resuelve el 75% de los llamados entrantes sin intervención humana; un ciclo de mejora continua basado en Codex redujo los traspasos a humanos en 15 puntos porcentuales en solo diez días. El lanzamiento es de disponibilidad general limitada, liderado por ingenieros de despliegue de OpenAI e integradores de sistemas seleccionados, no un producto de autoservicio.</p>
+        <div class="chips">
+          <span class="chip">Resolución sin humanos · <b>75% de los llamados</b></span>
+          <span class="chip">Mejora con Codex · <b>-15 puntos de traspasos en 10 días</b></span>
+        </div>
+        <div class="src">Fuentes: <a href="https://openai.com/index/introducing-openai-presence/" target="_blank">OpenAI News</a> · <a href="https://venturebeat.com/orchestration/openai-unveils-presence-a-new-platform-that-lets-enterprises-launch-and-manage-realtime-voice-agents-and-chatbots" target="_blank">VentureBeat</a></div>
+      </div>
+      <div class="card rv">
+        <span class="label">OpenAI · Infraestructura · Georgia</span>
+        <h4><a href="https://www.bloomberg.com/news/articles/2026-07-22/openai-plans-to-spend-over-30-billion-on-georgia-data-center" target="_blank">OpenAI confirma su primer centro de datos propio: más de US$30.000M en Georgia</a></h4>
+        <p>El "Proyecto Camellia", en el condado de Effingham, cerca de Savannah, es el primer centro de datos que OpenAI diseña y construye por su cuenta, en lugar de arrendar capacidad a socios como Oracle o Amazon Web Services. Ya aseguró un contrato con Georgia Power por 3,2 gigavatios de energía, con los primeros cientos de megavatios operativos desde 2028 y el desarrollo completo extendiéndose hasta 2032. OpenAI ofreció además US$80M para prioridades locales como escuelas y salud, más hasta US$71M en créditos de Codex para estudiantes universitarios de Georgia.</p>
+        <div class="chips">
+          <span class="chip">Inversión · <b>+US$30.000M</b></span>
+          <span class="chip">Energía contratada · <b>3,2 GW</b></span>
+        </div>
+        <div class="src">Fuente: <a href="https://www.bloomberg.com/news/articles/2026-07-22/openai-plans-to-spend-over-30-billion-on-georgia-data-center" target="_blank">Bloomberg</a></div>
+      </div>
+      <div class="card rv">
+        <span class="label">Anthropic · OpenAI · Washington</span>
+        <h4><a href="https://www.cnbc.com/2026/07/21/openai-anthropic-ai-lobbying-spending-q2-2026.html" target="_blank">Anthropic ya gasta más en lobby que Nvidia, en un trimestre récord para todo el sector de IA</a></h4>
+        <p>Anthropic gastó US$1,97M en cabildeo federal entre abril y junio, un 26% más que el trimestre anterior, superando a Nvidia (US$1,25M) y acercándose a Oracle (~US$2M). OpenAI gastó US$1,2M, apenas detrás de Nvidia. Entre ambos laboratorios de IA sumaron US$3,17M en el trimestre, un 23% más que a comienzos de año, con foco declarado en ciberseguridad, derechos de autor, cómputo en la nube y contratos de defensa.</p>
+        <div class="chips">
+          <span class="chip">Anthropic · <b>US$1,97M (+26%)</b></span>
+          <span class="chip">OpenAI · <b>US$1,2M</b></span>
+        </div>
+        <div class="src">Fuente: <a href="https://www.cnbc.com/2026/07/21/openai-anthropic-ai-lobbying-spending-q2-2026.html" target="_blank">CNBC</a></div>
+      </div>
+      <div class="card rv">
+        <span class="label">Glow · Ciberseguridad · Financiamiento</span>
+        <h4><a href="https://techcrunch.com/2026/07/22/glow-emerges-from-stealth-at-1-2b-valuation-to-challenge-endpoint-security-in-the-ai-era/" target="_blank">Glow sale del sigilo como unicornio: US$180M para asegurar los endpoints en la era de los agentes de IA</a></h4>
+        <p>La startup, fundada por exejecutivos de Meta y Snowflake, cerró una Serie A de US$180M a una valuación de US$1.200M, liderada por Sequoia Capital, Cyberstarts, Greenoaks y Redpoint Ventures. Glow propone un enfoque de "prevención primero" para proteger los endpoints corporativos frente a agentes de IA que ya operan con amplio acceso a sistemas internos, y usará los fondos para expandir su equipo comercial en EE. UU. y su laboratorio de investigación.</p>
+        <div class="chips">
+          <span class="chip">Serie A · <b>US$180M</b></span>
+          <span class="chip">Valuación · <b>US$1.200M</b></span>
+        </div>
+        <div class="src">Fuente: <a href="https://techcrunch.com/2026/07/22/glow-emerges-from-stealth-at-1-2b-valuation-to-challenge-endpoint-security-in-the-ai-era/" target="_blank">TechCrunch</a></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="noise-local"></div>
+  <div class="wrap">
+    <div class="fin">
+      <a class="logo-tfc" href="https://www.techfirst.io/" target="_blank" aria-label="Tech First">
+        <svg viewBox="0 0 108 54" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 22.3071V16.029H6.19988V4.60858H13.6941V16.029H20.0835V22.3071H13.6941V41.9423C13.6941 43.9015 14.0799 45.3038 14.8523 46.1498C15.6696 46.9958 16.8958 47.4188 18.531 47.4188H22.8909V53.6968H17.577C9.99225 53.6968 6.19988 49.9568 6.19988 42.4767V22.3071H0Z" fill="#F8F8F8"/><path d="M26.3652 22.3071V16.029H32.497V11.421C32.497 7.59206 33.451 4.74244 35.3585 2.87213C37.3115 0.957375 40.0368 0 43.5339 0H49.3248V6.21113H44.624C41.5353 6.21113 39.9912 8.12588 39.9912 11.9548V16.029H48.3708V22.3071H39.9912V53.6968H32.497V22.3071H26.3652Z" fill="#F8F8F8"/><path d="M108.001 44.6221V44.5354C103.19 44.1006 99.3608 40.2717 98.9265 35.4612H98.8399C98.4051 40.2717 94.5761 44.1012 89.7656 44.5354V44.6221C94.5761 45.0569 98.4056 48.8858 98.8399 53.6963H98.9265C99.3613 48.8858 103.19 45.0563 108.001 44.6221Z" fill="#FFCC01"/><path d="M60.4618 36.9799C60.7166 40.0444 61.5463 42.5188 62.9515 44.4043C64.6676 46.7066 66.8445 47.8575 69.4815 47.8575C71.3653 47.8575 73.0393 47.2297 74.5046 45.9737C76.0116 44.676 77.0578 43.1899 77.644 41.5159L83.4833 43.2112C82.6879 46.0159 80.9925 48.4644 78.3971 50.5575C75.844 52.6505 72.8509 53.6968 69.4185 53.6968C64.6046 53.6968 60.7116 52.0014 57.7399 48.6107C55.1434 45.612 53.6815 41.7352 53.3535 36.9799H60.4618Z" fill="#F8F8F8"/><path d="M69.4187 16.0234C72.851 16.0234 75.7395 17.0488 78.0834 19.1003C80.4274 21.1095 81.9343 23.4534 82.6042 26.1326L76.7649 27.765C76.221 26.1326 75.2996 24.7511 74.0025 23.6211C72.747 22.491 71.2395 21.9257 69.4817 21.9257C66.6354 21.9257 64.3955 23.1604 62.7632 25.6303C61.5825 27.4326 60.84 29.592 60.5357 32.1092H53.4043C53.811 27.6789 55.2352 24.0334 57.677 21.1725C60.6487 17.7401 64.5626 16.0239 69.4187 16.0239V16.0234Z" fill="#F8F8F8"/></svg>
+      </a>
+      <span class="sep"></span>
+      <span class="ai">AI Daily</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // scroll reveal — ease-out, respeta prefers-reduced-motion
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const els = document.querySelectorAll('.rv:not(.hero .rv)');
+  if(reduce){ els.forEach(e=>e.classList.add('in')); }
+  else{
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach((en,i)=>{
+        if(en.isIntersecting){
+          const sibs = [...en.target.parentElement.querySelectorAll('.rv')];
+          en.target.style.transitionDelay = Math.min(sibs.indexOf(en.target),3)*70 + 'ms';
+          en.target.classList.add('in');
+          io.unobserve(en.target);
+        }
+      });
+    },{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+    els.forEach(e=>io.observe(e));
+  }
+</script>
+</body>
+</html>
